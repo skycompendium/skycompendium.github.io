@@ -1,0 +1,23 @@
+name: Compile, and Lint
+
+on:
+  push:
+    branches:
+      - main
+      - gh-actions
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Compile
+        run: npm run compile
+
+      - name: Lint
+        run: npm run lint
