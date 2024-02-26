@@ -6,7 +6,6 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { TIFFLoader } from 'three/addons/loaders/TIFFLoader.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
-import './StarMap.css'
 
 const StarMap = () => {
   const sceneRef = React.useRef<HTMLDivElement>(null)
