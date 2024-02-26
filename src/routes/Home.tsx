@@ -6,7 +6,7 @@ const Home = () => {
     <div className="Home background">
       <nav>
         <ul>
-          <li><Link to="/sky-globe" className="Button large">Sky Globe</Link></li>
+          <li><Link to="/star-map" className="Button large">Star Map</Link></li>
           <li><Link to="/models" className="Button large">Models</Link></li>
         </ul>
       </nav>

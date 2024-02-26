@@ -1,0 +1,42 @@
+.StarMap > menu {
+  color: #e4e4e4;
+  position: fixed;
+  list-style-type: none;
+  padding: 6px;
+  right: 0;
+  display: flex;
+}
+@media screen and (max-width: 480px) {
+.StarMap > menu {
+  flex-direction: column;
+}
+}
+@media screen and (min-width: 481px) {
+.StarMap > menu {
+  flex-direction: row;
+}
+}
+
+.StarMap > menu > li > label {
+  font-size: 16px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 16px;
+  display: inline-block;
+}
+.StarMap > menu > li > label:hover {
+  color: #ffffff;
+}
+
+.StarMap > menu > li > input {
+  display: none;
+}
+
+.StarMap > menu > li > input:checked + label {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #e4e4e4;
+}
+
+.StarMap > canvas {
+  cursor: move;
+}

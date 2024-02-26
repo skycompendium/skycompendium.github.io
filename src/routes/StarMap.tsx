@@ -6,36 +6,35 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { TIFFLoader } from 'three/addons/loaders/TIFFLoader.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
-import './SkyGlobe.css'
+import './StarMap.css'
 
-const SkyGlobe = () => {
+const StarMap = () => {
   const sceneRef = React.useRef<HTMLDivElement>(null)
+  const [isDome, setIsDome] = React.useState(true)
+  const [controls, setControls] = React.useState<OrbitControls>()
+  const [material, setMaterial] = React.useState<THREE.ShaderMaterial>()
 
   React.useEffect(() => {
     const currentScene = sceneRef.current
 
     // camera
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100)
-    camera.position.set(0, 0, window.innerWidth <= 768 || window.innerHeight <= 768 ? 32 : 24)
+    camera.position.set(0, 0, 20)
 
     // renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
+    const renderer = new THREE.WebGLRenderer({ antialias: true})
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.toneMapping = THREE.CineonToneMapping
     renderer.toneMappingExposure = 8.8
-
     currentScene && currentScene.appendChild(renderer.domElement)
-
-    const composer = new EffectComposer(renderer)
 
     // controls
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.target = new THREE.Vector3(0, 0, 0)
-    controls.minDistance = 0.1
-    controls.maxDistance = 90
     controls.enableDamping = true
     controls.update()
+    setControls(controls)
 
     // textures
     const textureLoader = new THREE.TextureLoader()
@@ -51,7 +50,7 @@ const SkyGlobe = () => {
     starmapTexture.minFilter = THREE.LinearFilter
     constellationsTexture.colorSpace = THREE.SRGBColorSpace
 
-    // sky globe
+    // star dome/globe
     const geometry = new THREE.IcosahedronGeometry(10, 16)
     const material = new THREE.ShaderMaterial({
       uniforms: {
@@ -83,24 +82,22 @@ void main() {
   }
 }
 `,
-      depthWrite: false
+      depthWrite: false,
     })
+    setMaterial(material)
 
-    controls.addEventListener('change', () => {
-      const distance = camera.position.x*camera.position.x + camera.position.y*camera.position.y + camera.position.z*camera.position.z
-      material.side = distance < 169 ? THREE.BackSide : THREE.FrontSide
-    })
-
-    const skyGlobe = new THREE.Mesh(geometry, material)
+    const starMap = new THREE.Mesh(geometry, material)
 
     // scene
     const scene = new THREE.Scene()
-    scene.add(skyGlobe)
+    scene.add(starMap)
 
     // post-processing
     const renderPass = new RenderPass(scene, camera)
     const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.16, 0.1, 0)
     const outputPass = new OutputPass()
+
+    const composer = new EffectComposer(renderer)
     composer.addPass(renderPass)
     composer.addPass(bloomPass)
     composer.addPass(outputPass)
@@ -119,6 +116,7 @@ void main() {
     }
     renderer.setAnimationLoop(animate)
 
+    // clean-up
     return () => {
       renderer.setAnimationLoop(null)
       currentScene && currentScene.removeChild(renderer.domElement)
@@ -126,9 +124,38 @@ void main() {
     }
   }, [])
 
+  // set appropriate controls for the dome, and the globe
+  React.useEffect(() => {
+    if (controls) {
+      if (isDome) {
+        controls.minDistance = 0.2
+        controls.maxDistance = 20
+        controls.rotateSpeed = -0.36
+      } else {
+        controls.minDistance = 15
+        controls.maxDistance = 36
+        controls.rotateSpeed = 0.36
+      }
+      controls.update()
+    }
+
+    if (material) material.side = isDome ? THREE.BackSide : THREE.FrontSide
+  }, [controls, material, isDome])
+
   return (
-    <div className="SkyGlobe" ref={sceneRef} />
+    <div className="StarMap" ref={sceneRef}>
+      <menu>
+        <li>
+          <input type="radio" name="map" id="dome"checked={isDome} onChange={() => setIsDome(true) } />
+          <label htmlFor="dome">Dome</label>
+        </li>
+        <li>
+          <input type="radio" name="map" id="globe"checked={!isDome} onChange={() => setIsDome(false) } />
+          <label htmlFor="globe">Globe</label>
+        </li>
+      </menu>
+    </div>
   )
 }
 
-export default SkyGlobe
+export default StarMap
