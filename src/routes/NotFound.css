@@ -1,0 +1,16 @@
+.NotFound {
+  background: black url("https://raw.githubusercontent.com/skycompendium/gallery/main/textures/2k_stars_milky_way.jpg") no-repeat fixed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 32px;
+}
+
+.NotFound > h1 {
+  font-size: 48px;
+  font-weight: 400;
+  color: #e4e4e4;
+}

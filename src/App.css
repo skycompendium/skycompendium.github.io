@@ -1,0 +1,27 @@
+.App .Button {
+  font-weight: 400;
+  color: #e4e4e4;
+  border: solid #e4e4e4;
+  display: flex;
+  justify-content: center;
+}
+
+.App .Button.medium {
+  font-size: 24px;
+  border-width: 1px;
+  border-radius: 6px;
+  padding: 6px 16px;
+}
+
+.App .Button.large {
+  font-size: 48px;
+  border-width: 2px;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+.App .Button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #ffffff;
+}
