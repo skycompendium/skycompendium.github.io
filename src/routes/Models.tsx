@@ -1,6 +1,6 @@
 const Models = () => {
   return (
-    <div className="Models"></div>
+    <div className="Models background" />
   )
 }
 

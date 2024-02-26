@@ -1,18 +1,8 @@
-.Home {
-  background: black url("https://raw.githubusercontent.com/skycompendium/gallery/main/textures/2k_stars_milky_way.jpg") no-repeat fixed;
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  align-items: center;
-  justify-content: center;
-}
-
 .Home > nav > ul {
   display: flex;
   width: 80vw;
   justify-content: center;
 }
-
 @media screen and (max-width: 768px) {
 .Home > nav > ul {
   flex-direction: column;

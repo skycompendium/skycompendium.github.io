@@ -3,7 +3,7 @@ import './Home.css'
 
 const Home = () => {
   return (
-    <div className="Home">
+    <div className="Home background">
       <nav>
         <ul>
           <li><Link to="/sky-globe" className="Button large">Sky Globe</Link></li>

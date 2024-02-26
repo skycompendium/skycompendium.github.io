@@ -1,3 +1,29 @@
+.App > nav {
+  font-size: 24px;
+  font-weight: 400;
+  color: #e4e4e4;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.App > nav > a {
+  display: inline-block;
+  padding: 6px 16px;
+}
+.App > nav > a:hover {
+  color: #ffffff;
+}
+
+.App .background {
+  background: black url("https://raw.githubusercontent.com/skycompendium/gallery/main/textures/2k_stars_milky_way.jpg") no-repeat fixed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .App .Button {
   font-weight: 400;
   color: #e4e4e4;
