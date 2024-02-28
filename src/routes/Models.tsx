@@ -15,8 +15,7 @@ const Models = () => {
 
     // camera
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.set(0, 28, 28)
-    camera.up = new THREE.Vector3(0, 1, -1)
+    camera.position.set(0, 0, 36)
 
     // renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -45,52 +44,75 @@ const Models = () => {
     const earth = Model.Earth(textureLoader)
     earth.position.set(0, 0, 0)
 
+    const createOrbit = (radius: number, color: number) => {
+      const points = new THREE.Path().absarc(0, 0, radius, 0, 2*Math.PI).getPoints(64)
+      const geometry = new THREE.BufferGeometry().setFromPoints(points)
+      const material = new THREE.LineBasicMaterial({ color: color })
+      geometry.rotateX(Math.PI / 2)
+
+      return new THREE.Line(geometry, material)
+    }
+
     const moon = Model.Moon(textureLoader)
     moon.scale.set(0.25, 0.25, 0.25)
+    const moonOrbit = createOrbit(5, 0xf0f0f0)
     const moonGroup = new THREE.Group()
     moonGroup.add(moon)
+    moonGroup.add(moonOrbit)
     moon.position.set(5, 0, 0)
     moonGroup.rotation.y = randomRotation()
 
     const sun = Model.Sun(textureLoader)
     sun.scale.set(0.45, 0.45, 0.45)
+    const sunOrbit = createOrbit(9, 0xfce570)
     const sunGroup = new THREE.Group()
     sunGroup.add(sun)
+    sunGroup.add(sunOrbit)
     sunGroup.rotation.y = randomRotation()
     sun.position.set(9, 0, 0)
 
     const jupiter = Model.Jupiter(textureLoader)
     jupiter.scale.set(0.45, 0.45, 0.45)
+    const jupiterOrbit = createOrbit(16, 0x90614d)
     const jupiterGroup = new THREE.Group()
     jupiterGroup.add(jupiter)
+    jupiterGroup.add(jupiterOrbit)
     jupiterGroup.rotation.y = randomRotation()
     jupiter.position.set(16, 0, 0)
 
     const mercury = Model.Mercury(textureLoader)
     mercury.scale.set(0.45, 0.45, 0.45)
+    const mercuryOrbit = createOrbit(19, 0xb5a7a7)
     const mercuryGroup = new THREE.Group()
     mercuryGroup.add(mercury)
+    mercuryGroup.add(mercuryOrbit)
     mercuryGroup.rotation.y = randomRotation()
     mercury.position.set(19, 0, 0)
 
     const mars = Model.Mars(textureLoader)
     mars.scale.set(0.45, 0.45, 0.45)
+    const marsOrbit = createOrbit(25, 0x663926)
     const marsGroup = new THREE.Group()
     marsGroup.add(mars)
+    marsGroup.add(marsOrbit)
     marsGroup.rotation.y = randomRotation()
     mars.position.set(25, 0, 0)
 
     const venus = Model.Venus(textureLoader)
     venus.scale.set(0.45, 0.45, 0.45)
+    const venusOrbit = createOrbit(27, 0xefefef)
     const venusGroup = new THREE.Group()
     venusGroup.add(venus)
+    venusGroup.add(venusOrbit)
     venusGroup.rotation.y = randomRotation()
     venus.position.set(27, 0, 0)
 
     const saturn = Model.Saturn(textureLoader)
     saturn.scale.set(0.45, 0.45, 0.45)
+    const saturnOrbit = createOrbit(28, 0xc3a171)
     const saturnGroup = new THREE.Group()
     saturnGroup.add(saturn)
+    saturnGroup.add(saturnOrbit)
     saturnGroup.rotation.y = randomRotation()
     saturn.position.set(28, 0, 0)
 
@@ -100,6 +122,8 @@ const Models = () => {
     stars.position.set(0, 0, 0)
 
     const scene = new THREE.Scene()
+    scene.rotation.x += Math.PI / 24
+    scene.rotation.z += Math.PI / 36
     scene.add(earth)
     scene.add(moonGroup)
     scene.add(sunGroup)
