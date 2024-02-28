@@ -9,7 +9,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
 const StarMap = () => {
   const sceneRef = React.useRef<HTMLDivElement>(null)
-  const [isDome, setIsDome] = React.useState(true)
+  const [isDome, setIsDome] = React.useState(false)
   const [controls, setControls] = React.useState<OrbitControls>()
   const [material, setMaterial] = React.useState<THREE.ShaderMaterial>()
 
