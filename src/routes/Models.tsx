@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import Model from './Model'
 
 const Models = () => {
   const sceneRef = React.useRef<HTMLDivElement>(null)
@@ -13,16 +14,16 @@ const Models = () => {
     const currentScene = sceneRef.current
 
     // camera
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100)
-    camera.position.set(0, 0, 32)
-    camera.up = new THREE.Vector3(0, 1, 0)
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    camera.position.set(0, 28, 28)
+    camera.up = new THREE.Vector3(0, 1, -1)
 
     // renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.toneMapping = THREE.CineonToneMapping
-    renderer.toneMappingExposure = 3.0
+    renderer.toneMappingExposure = 1.6
     renderer.shadowMap.enabled = true
 
     currentScene && currentScene.appendChild(renderer.domElement)
@@ -32,103 +33,74 @@ const Models = () => {
     // controls
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.target = new THREE.Vector3(0, 0, 0)
-    controls.minDistance = 0.1
-    controls.maxDistance = 60
+    controls.minDistance = 8
+    controls.maxDistance = 96
     controls.enableDamping = true
     controls.update()
 
-    // textures
+    // objects, and scene
     const textureLoader = new THREE.TextureLoader()
-    const texturesPath = 'https://raw.githubusercontent.com/skycompendium/gallery/main/textures'
+    const randomRotation = () => 2*Math.PI*Math.random()
 
-    const clouds = (() => {
-      const texture = textureLoader.load(`${texturesPath}/2k_earth_clouds.jpg`)
-      texture.colorSpace = THREE.SRGBColorSpace
-      const geometry = new THREE.IcosahedronGeometry(1.01, 16)
-      const material = new THREE.MeshPhongMaterial({ alphaHash: false, color: '#eeeeee', alphaTest: 0.1, alphaMap: texture })
-      return new THREE.Mesh(geometry, material)
-    })()
-    clouds.castShadow = true
-    clouds.receiveShadow = true
+    const earth = Model.Earth(textureLoader)
+    earth.position.set(0, 0, 0)
 
-    const planet = ({ name, size }: { name: string, size: number }) => {
-      const texture = textureLoader.load(`${texturesPath}/2k_${name}.jpg`)
-      texture.magFilter = THREE.LinearFilter
-      texture.minFilter = THREE.LinearFilter
-      texture.colorSpace = THREE.SRGBColorSpace
-      const geometry = new THREE.IcosahedronGeometry(size, 16)
-      const material = new THREE.MeshPhongMaterial({ map: texture })
-      const mesh = new THREE.Mesh(geometry, material)
-      mesh.receiveShadow = true
-      mesh.castShadow = true
-      return mesh
-    }
-
-    const star = ({ name, size }: { name: string, size: number }) => {
-      const texture = textureLoader.load(`${texturesPath}/2k_${name}.jpg`)
-      texture.magFilter = THREE.LinearFilter
-      texture.minFilter = THREE.LinearFilter
-      texture.colorSpace = THREE.SRGBColorSpace
-      const geometry = new THREE.IcosahedronGeometry(size, 16)
-      const material = new THREE.MeshBasicMaterial({ map: texture })
-      return new THREE.Mesh(geometry, material)
-    }
-
-    const earth = planet({ name: 'earth_daymap', size: 1 })
-
-    const moon = planet({ name: 'moon', size: 0.2 })
+    const moon = Model.Moon(textureLoader)
+    moon.scale.set(0.25, 0.25, 0.25)
     const moonGroup = new THREE.Group()
     moonGroup.add(moon)
+    moon.position.set(5, 0, 0)
+    moonGroup.rotation.y = randomRotation()
 
-    const sun = star({ name: 'sun', size: 0.9 })
-    const sunlight = new THREE.PointLight('#ffffff', 360, 1000)
-    sunlight.castShadow = true
+    const sun = Model.Sun(textureLoader)
+    sun.scale.set(0.45, 0.45, 0.45)
     const sunGroup = new THREE.Group()
-    sunGroup.add(sunlight)
     sunGroup.add(sun)
+    sunGroup.rotation.y = randomRotation()
+    sun.position.set(9, 0, 0)
 
-    const jupiter = planet({ name: 'jupiter', size: 0.4 })
+    const jupiter = Model.Jupiter(textureLoader)
+    jupiter.scale.set(0.45, 0.45, 0.45)
     const jupiterGroup = new THREE.Group()
     jupiterGroup.add(jupiter)
+    jupiterGroup.rotation.y = randomRotation()
+    jupiter.position.set(16, 0, 0)
 
-    const mercury = planet({ name: 'mercury', size: 0.3 })
+    const mercury = Model.Mercury(textureLoader)
+    mercury.scale.set(0.45, 0.45, 0.45)
     const mercuryGroup = new THREE.Group()
     mercuryGroup.add(mercury)
+    mercuryGroup.rotation.y = randomRotation()
+    mercury.position.set(19, 0, 0)
 
-    const mars = planet({ name: 'mars', size: 0.4 })
+    const mars = Model.Mars(textureLoader)
+    mars.scale.set(0.45, 0.45, 0.45)
     const marsGroup = new THREE.Group()
     marsGroup.add(mars)
+    marsGroup.rotation.y = randomRotation()
+    mars.position.set(25, 0, 0)
 
-    const venus = planet({ name: 'venus_atmosphere', size: 0.6 })
+    const venus = Model.Venus(textureLoader)
+    venus.scale.set(0.45, 0.45, 0.45)
     const venusGroup = new THREE.Group()
     venusGroup.add(venus)
+    venusGroup.rotation.y = randomRotation()
+    venus.position.set(27, 0, 0)
 
-    const saturn = planet({ name: 'saturn', size: 0.6 })
+    const saturn = Model.Saturn(textureLoader)
+    saturn.scale.set(0.45, 0.45, 0.45)
     const saturnGroup = new THREE.Group()
     saturnGroup.add(saturn)
-
-    const stars = star({ name: 'stars_milky_way', size: 32 })
-    stars.material.side = THREE.BackSide
-    stars.rotation.z += THREE.MathUtils.degToRad(63)
-
-    earth.position.set(0, 0, 0)
-    earth.rotation.y += THREE.MathUtils.degToRad(23.44)
-    clouds.position.set(0, 0, 0)
-    clouds.rotation.y += earth.rotation.y += THREE.MathUtils.degToRad(23.44)
-    moon.position.set(5, 0, 0)
-    sun.position.set(9, 0, 0)
-    sunlight.position.set(9, 0, 0)
-    jupiter.position.set(16, 0, 0)
-    mercury.position.set(19, 0, 0)
-    mars.position.set(23, 0, 0)
-    venus.position.set(25, 0, 0)
+    saturnGroup.rotation.y = randomRotation()
     saturn.position.set(28, 0, 0)
+
+    const stars = Model.FixedStars(textureLoader)
+    stars.scale.set(36, 36, 36)
+    stars.rotation.z += THREE.MathUtils.degToRad(62.9)
     stars.position.set(0, 0, 0)
 
-    // scene
     const scene = new THREE.Scene()
     scene.add(earth)
-    scene.add(clouds)
     scene.add(moonGroup)
     scene.add(sunGroup)
     scene.add(jupiterGroup)
@@ -137,11 +109,11 @@ const Models = () => {
     scene.add(venusGroup)
     scene.add(saturnGroup)
     scene.add(stars)
-    scene.add(new THREE.AmbientLight(0x363636))
+    scene.add(new THREE.AmbientLight(0x484848))
 
     // post-processing
     const renderPass = new RenderPass(scene, camera)
-    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.3, 0.1, 0)
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.24, 0.1, 0)
     const outputPass = new OutputPass()
     composer.addPass(renderPass)
     composer.addPass(bloomPass)
@@ -156,14 +128,14 @@ const Models = () => {
     window.addEventListener('resize', handleResize)
 
     const animate = () => {
-      moonGroup.rotation.y -= 0.0037
-      sunGroup.rotation.y -= 0.0036
-      jupiterGroup.rotation.y -= 0.002
-      mercuryGroup.rotation.y -= 0.0017
-      marsGroup.rotation.y += 0.001
-      venusGroup.rotation.y -= 0.0002
-      saturnGroup.rotation.y -= 0.0001
-      stars.rotation.y += 0.00361
+      moonGroup.rotation.y -= THREE.MathUtils.degToRad(373 / 6000)
+      sunGroup.rotation.y -= THREE.MathUtils.degToRad(360 / 6000)
+      jupiterGroup.rotation.y -= THREE.MathUtils.degToRad(202.5 / 6000)
+      mercuryGroup.rotation.y -= THREE.MathUtils.degToRad(80.5 / 6000)
+      marsGroup.rotation.y -= THREE.MathUtils.degToRad(-60 / 6000)
+      venusGroup.rotation.y -= THREE.MathUtils.degToRad(50 / 6000)
+      saturnGroup.rotation.y -= THREE.MathUtils.degToRad(10 / 6000)
+      stars.rotation.y += THREE.MathUtils.degToRad(361 / 6000)
       controls.update()
       composer.render()
     }
