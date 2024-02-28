@@ -168,6 +168,14 @@ const Models = () => {
     return () => {
       renderer.setAnimationLoop(null)
       currentScene && currentScene.removeChild(renderer.domElement)
+      controls.dispose()
+      renderer.forceContextLoss()
+      renderer.dispose()
+      scene.traverse((node) => {
+        if ('dispose' in node && typeof node.dispose === 'function') {
+          node.dispose()
+        }
+      })
       window.removeEventListener('resize', handleResize)
     }
 
